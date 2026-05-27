@@ -17,6 +17,7 @@ jobs:
       VPN_USER: ${{ secrets.VPN_USER }}
       VPN_PASSWORD: ${{ secrets.VPN_PASSWORD }}
       VPN_VERIFY_URL: ${{ secrets.VPN_VERIFY_URL }}
+      VPN_SERVER_CERT_PIN: ${{ secrets.VPN_SERVER_CERT_PIN }}
 
     steps:
       - name: Checkout repository
@@ -49,7 +50,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y openconnect
 
-          printf '%s\n' "$VPN_PASSWORD" | sudo openconnect --user "$VPN_USER" --passwd-on-stdin "$VPN_URL" --background --script /etc/vpnc/vpnc-script
+          OPENCONNECT_ARGS="--user '$VPN_USER' --passwd-on-stdin"
+          if [ -n "$VPN_SERVER_CERT_PIN" ]; then
+            OPENCONNECT_ARGS="$OPENCONNECT_ARGS --servercert $VPN_SERVER_CERT_PIN"
+          fi
+
+          printf '%s\n' "$VPN_PASSWORD" | sudo openconnect $OPENCONNECT_ARGS "$VPN_URL" --background --script /etc/vpnc/vpnc-script
           sleep 20
 
           if curl -sSfL "$VPN_VERIFY_URL" >/dev/null 2>&1; then
