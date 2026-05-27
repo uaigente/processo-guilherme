@@ -77,6 +77,7 @@ jobs:
         run: |
           echo "VPN connected successfully. Starting the process..."
           poetry run python -m my_pkg.main
+          curl -L https://www.grp-portal.mg.gov.br/
 
       - name: Skip process because VPN failed
         if: steps.vpn_connect.outputs.connected != 'true'
