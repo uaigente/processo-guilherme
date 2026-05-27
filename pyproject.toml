@@ -12,9 +12,8 @@ dependencies = [
     "python-dotenv (>=1.2.1,<2.0.0)"
 ]
 
-
-[tool.repo-template]
-upstream = 'https://github.com/ziguraty/repo-template.git'
+[tool.poetry]
+package-mode = false
 
 
 [build-system]
